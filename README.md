@@ -169,6 +169,10 @@ Profile: Deep Intense Rock
      Why   : energy similarity (+0.90)
 ```
 
+<img width="1119" height="660" alt="Screenshot 2026-04-14 at 9 15 26 PM" src="https://github.com/user-attachments/assets/c35acb98-c466-4bc6-a6be-16b802e2bdf5" />
+<img width="1111" height="660" alt="Screenshot 2026-04-14 at 9 15 46 PM" src="https://github.com/user-attachments/assets/1f65e33e-e9d0-440f-a72d-020a02960483" />
+
+
 ---
 
 ## Experiments You Tried
