@@ -38,9 +38,15 @@ Real-world platforms like Spotify combine two main approaches: **collaborative f
 
 **Data flow:**
 
-```
-Input (User Prefs) → Loop over all songs → score_song() for each
-→ Sort by score descending → Return top K recommendations
+```mermaid
+flowchart TD
+    A[User Preference Profile\ngenre · mood · energy · likes_acoustic] --> B[Load songs.csv]
+    B --> C{For each song in catalog}
+    C --> D[score_song\ngenre match +2.0\nmood match +1.0\nenergy proximity 0–1.0\nacoustic bonus +0.5]
+    D --> E[Attach score + reasons to song]
+    E --> C
+    C --> F[Sort all scored songs\nhighest → lowest]
+    F --> G[Return top K results\nwith explanations]
 ```
 
 ---

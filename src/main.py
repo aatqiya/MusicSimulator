@@ -5,6 +5,10 @@ Run with:
     python -m src.main
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.dirname(__file__))
+
 from recommender import load_songs, recommend_songs
 
 
