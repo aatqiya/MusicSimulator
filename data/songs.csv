@@ -9,3 +9,11 @@ id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
 8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22
 9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78
 10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35
+11,Neon Pulse,Club Static,edm,energetic,0.95,140,0.72,0.91,0.04
+12,Golden Hour,Cassia,folk,relaxed,0.45,95,0.80,0.55,0.85
+13,Red Dirt Road,Mesa Kings,country,happy,0.60,104,0.78,0.68,0.62
+14,Midnight Rain,Luna Vale,r&b,moody,0.58,88,0.63,0.70,0.30
+15,Thunder Core,Ironwall,metal,intense,0.97,168,0.30,0.52,0.06
+16,Bossa Nova Cafe,Rio Breeze,bossa nova,relaxed,0.38,86,0.74,0.60,0.76
+17,City Lights,Nova Skyline,hip-hop,confident,0.72,95,0.68,0.80,0.15
+18,Piano in the Rain,Clara Voss,classical,melancholy,0.22,70,0.55,0.30,0.95
