@@ -14,7 +14,7 @@ This project extends the **Module 2 Music Recommender** mini-project, which intr
 
 ## Demo Walkthrough
 
-> **[▶ Watch the Loom walkthrough](YOUR_LOOM_LINK_HERE)** — 5–7 minute video showing all three profiles running end-to-end, confidence labels on each result, and evaluation pass/fail output.
+> **[▶ Watch the Loom walkthrough](https://www.loom.com/share/9567e14ee41248a49e1d928a57de55b2)** — 5–7 minute video showing all three profiles running end-to-end, confidence labels on each result, and evaluation pass/fail output.
 
 ---
 
