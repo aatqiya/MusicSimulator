@@ -22,7 +22,7 @@ To score a song, the system adds up points:
 - The closer the song's energy is to the user's target, the more energy points it earns — up to 1 point for a perfect match, scaling down to 0 for a completely opposite energy.
 - If the user likes acoustic music and the song is highly acoustic, it gets a small bonus of 0.5 points.
 
-Once every song has a score, they are sorted from highest to lowest and the top results are returned. The system also explains each recommendation in plain language so users understand exactly why a song appeared.
+Once every song has a score, they are sorted from highest to lowest and the top results are returned. The system also explains each recommendation in plain language so users understand exactly why a song appeared. A confidence label (High / Medium / Low) is attached to each result based on its score relative to the theoretical maximum of 4.5.
 
 ---
 
@@ -53,21 +53,23 @@ Another limitation is that the energy score is symmetric — a song at 0.3 energ
 
 Finally, the system has no notion of what the user has already heard, so it will recommend the same top song every time with no way to provide fresh suggestions.
 
+**Misuse potential:** Because the scoring weights are fully exposed, a bad actor could reverse-engineer the catalog to make any song surface first by tuning its metadata. In a real production system, the scoring logic would not be public. The system should also never be used to make decisions about which artists receive promotion or distribution — it reflects catalog size bias, not musical quality.
+
 ---
 
 ## 7. Evaluation
 
 Three distinct profiles were tested:
 
-- **High-Energy Pop** (genre: pop, mood: happy, energy: 0.85): Results felt accurate. "Sunrise City" was a clear top pick with near-perfect matches on all three scored attributes. "Gym Hero" was correctly ranked second despite being "intense" rather than "happy" — it still earned genre and energy points.
+- **High-Energy Pop** (genre: pop, mood: happy, energy: 0.85): Results felt accurate. "Sunrise City" was a clear top pick with near-perfect matches on all three scored attributes. "Gym Hero" was correctly ranked second despite being "intense" rather than "happy" — it still earned genre and energy points. Avg confidence: 0.51.
 
-- **Chill Lofi** (genre: lofi, mood: chill, energy: 0.38, likes acoustic: true): Results also felt right. "Library Rain" and "Midnight Coding" were nearly tied, which makes sense because both are lofi + chill + low energy + acoustic. The acoustic bonus was the tiebreaker.
+- **Chill Lofi** (genre: lofi, mood: chill, energy: 0.38, likes acoustic: true): Results also felt right. "Library Rain" and "Midnight Coding" were nearly tied, which makes sense because both are lofi + chill + low energy + acoustic. The acoustic bonus was the tiebreaker. Avg confidence: 0.72 — the highest of all three profiles.
 
-- **Deep Intense Rock** (genre: rock, mood: intense, energy: 0.92): Only one rock song exists in the catalog, so Storm Runner dominated at position 1. Positions 2–5 were filled by high-energy songs from other genres. This exposed the catalog's thinness for niche genres.
+- **Deep Intense Rock** (genre: rock, mood: intense, energy: 0.92): Only one rock song exists in the catalog, so Storm Runner dominated at position 1. Positions 2–5 were filled by high-energy songs from other genres. This exposed the catalog's thinness for niche genres. Avg confidence: 0.44 — the lowest, reflecting how quickly results degrade when genre coverage is thin.
 
 An adversarial test with contradictory preferences (lofi + intense + 0.9 energy) confirmed the system cannot serve users with internally conflicting tastes — it splits its points between genre and energy with no song winning on both.
 
-One experiment doubled the energy weight. The result was that "Gym Hero" (pop, intense) overtook "Storm Runner" (rock, intense) for the rock profile because their energies were nearly identical and energy now outweighed genre. This confirmed that weight choices have large downstream effects.
+**Overall: 3/3 profiles PASSED. Overall avg confidence: 0.56.**
 
 ---
 
@@ -88,3 +90,13 @@ One experiment doubled the energy weight. The result was that "Gym Hero" (pop, i
 The most surprising moment was realizing how quickly a simple scoring rule creates a filter bubble. After testing just three profiles, it was obvious that pop songs dominated results even for users who had no genre preference because pop happened to match mood and energy more often in this small catalog. Real recommender systems face the same problem at a vastly larger scale, and the industry solutions — diversity re-ranking, serendipity injection — all exist precisely because naive scoring always trends toward the familiar.
 
 Using fixed weights also made me think differently about how Spotify's "Discover Weekly" actually works. Collaborative filtering sidesteps the weight problem entirely by saying "people like you listened to this" rather than "this song scores 3.47." That approach requires millions of data points but avoids the brittleness I ran into with hand-tuned weights. Building this toy version made the trade-offs between interpretability and accuracy feel very real — the simpler the model, the easier it is to explain, but the worse it handles edge cases.
+
+---
+
+## 10. AI Collaboration
+
+AI (Claude) was used throughout this project as a coding partner and design reviewer.
+
+**Helpful suggestion:** When building the evaluator, Claude suggested attaching human-readable confidence labels ("High / Medium / Low") on top of raw numeric confidence scores, rather than just printing the float. This made the terminal output immediately interpretable without forcing users to mentally map 0.72 onto a quality scale. That suggestion was adopted directly and improved the readability of every output block.
+
+**Flawed suggestion:** Claude initially suggested doubling the energy weight — replacing `1.0 - energy_gap` with `2.0 - 2*energy_gap` — arguing it would give more nuanced differentiation between songs with similar genres. In practice (Experiment 3), this caused "Gym Hero" (pop, intense) to overtake "Storm Runner" (rock, intense) for the Deep Rock profile purely on energy proximity, overriding the genre signal entirely. The suggestion was rejected after testing confirmed it broke the genre-first priority the system is designed around.
